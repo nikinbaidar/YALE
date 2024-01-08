@@ -1,6 +1,10 @@
-# FMRI PROJECT (YALE Dataset)
+# FMRI PROJECT
 
-The image data is acquired from [this](https://fcon_1000.projects.nitrc.org/indi/cmi_healthy_brain_network/sharing_neuro.html) repository.
+## Acquiring The Image Data
+
+The image data is acquired from 
+[this repo.](https://fcon_1000.projects.nitrc.org/indi/cmi_healthy_brain_network/sharing_neuro.html).
+
 
 ```javascript
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -12,16 +16,17 @@ checkboxes.forEach((checkbox) => {
 copy(urls);
 ```
 
-For each release, copy the above piece of JS code in your browser console. This
-will directly copy all the links to the images to your clipboard. Then simply
-output the contents of your clipboard in a text file. 
-Now, suppose you have a list of participants you want to work with, use `grep`
-to extract the URLs from this file now and `wget` to directly download the
+For each release, copy the above piece of JS code in your 
+[browser console](https://appuals.com/open-browser-console/). This will
+directly copy all the links to the images to your clipboard. Then simply paste
+the contents of your clipboard in a `all_participants_urls.txt` file. Now,
+suppose you have a list of participants you want to work with, use `grep` to
+extract the URLs from the above file now and `wget` to directly download the
 tarballs locally.
 
 ```bash
-# fetch_data.sh
-rm -f not_found.txt
+#!/bin/bash
+rm -f ./not_found.txt
 
 SUBEJCT_LIST=(
     NDARUD306BB0
@@ -41,4 +46,3 @@ for sub in "${SUBJECT_LIST[@]}"; do
     fi
 done
 ```
-

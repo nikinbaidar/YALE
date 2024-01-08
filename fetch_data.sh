@@ -1,4 +1,5 @@
 #!/bin/bash
+source ${DOTS}/shell/prompt_colors
 
 SUBJECT_LIST=(
     NDARUD306BB0
@@ -1700,20 +1701,35 @@ SUBJECT_LIST=(
     NDARUK658FMU
 );
 
-# Adjust these values.
-start=0
-stop=10
+function download-images() {
+    start=$1
+    stop=$2
+    len=$(( ${stop} - ${start}))
+    download_count=0
+    missing_url_count=0
 
-len=$(( ${stop} - ${start}))
+    echo Downloading ${len} targets.
+    for ((i = ${start}; i < ${stop}; i++)); do
+        sub=${SUBJECT_LIST[i]}
+        url=$(grep ${sub} ./all_participant_urls.txt)
+        if [ -n "${url}" ]; then 
+            wget -c ${url//\"/}
+            (( download_count++ ))
+            echo -e "\n${_g}${download_count} of ${len} downloaded.${w}"
+        else
+            echo "${sub}" >> nf.txt
+            (( missing_url_count++ ))
+            echo -e "\n${_r}${missing_url_count} of ${len} missing.${w}"
+        fi
+    done
+    echo -e "From ${start} to ${stop}: ${download_count} downloaded. ${missing_url_count} missing"
+}
 
-echo \#Subjects=${len}
+rm -f ./nf.txt
 
+# download-images start stop
+# download-images 0 10
+# download-images 1200 1500
 
-for ((i = ${start}; i < ${stop}; i++)); do
-    sub=${SUBJECT_LIST[i]}
-    url=$(grep ${sub} ./all_participant_urls.txt)
-    if [ -n "${url}" ]; then 
-        # Use the unqouted url
-        wget -c ${url//\"/}
-    fi
-done
+echo From 0 to 10: 8 downloaded. 2 missing
+echo From 1200 to 1500: 272 downloaded. 28 missing
